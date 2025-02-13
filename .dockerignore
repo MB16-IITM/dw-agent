@@ -1,0 +1,33 @@
+# Development files
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Environment files
+.env
+.env.*
+.secrets
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# Logs and databases
+*.log
+*.sqlite
+*.db
+
+# Local data
+/data/*
+data/
+!data/README.md
+
+# IDE files
+.vscode/
+.idea/
+
+node_modules/
+
