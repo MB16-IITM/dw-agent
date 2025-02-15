@@ -89,6 +89,9 @@ def handle_a9(params: dict):
         if not input_path.exists():
             raise HTTPException(404, "Input file not found")
             
+        if not os.environ.get('AIPROXY_TOKEN'):
+            raise HTTPException(401, "Missing AI Proxy token")
+        
         # Read comments
         with open(input_path, 'r') as f:
             comments = [line.strip() for line in f if line.strip()]
@@ -100,8 +103,8 @@ def handle_a9(params: dict):
         response = requests.post(
             f"{AI_PROXY_BASE}/embeddings",
             headers={
-                "Authorization": f"Bearer {AIPROXY_TOKEN}",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {os.environ['AIPROXY_TOKEN'].strip()}"
             },
             json={
                 "input": comments,
@@ -131,8 +134,10 @@ def handle_a9(params: dict):
         with open(output_path, 'w') as f:
             f.write('\n'.join(best_pair))
             
-        return {"status": "success", "similarity": float(max_sim)}
-        
+        # return {"status": "success", "similarity": float(max_sim)}
+     # Add order validation
+        if len(embeddings) != len(comments):
+            raise ValueError("Embedding count mismatch")
     except HTTPException as he:
         raise he
     except requests.exceptions.RequestException as e:

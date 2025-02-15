@@ -9,9 +9,20 @@ dependencies = [
     "python-multipart>=0.0.9",
     "pydantic>=2.6.4",
     "python-dateutil>=2.9.0",
-    "numpy>=1.26.4"
+    "numpy>=1.26.4",
+    "gitpython>=3.1.40",
+    "python-gitlab>=3.2.0",  # For GitLab API integration
+    "pygithub>=2.2.0",       # For GitHub API integration
+    "semantic-version>=2.10", # For version validation
+    "pillow>=10.3.0",
+    "python-magic>=0.4.27",
+    "beautifulsoup4>=4.12.3",
+    "requests-html>=0.10.0",
+    "markdown >= 3.4.3"
 ]
 
+
+
 [build-system]
-requires = ["setuptools>=65.5.1"]
+requires = ["setuptools>=65.5.1", "wheel>=0.42.0"]
 build-backend = "setuptools.build_meta"

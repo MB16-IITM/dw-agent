@@ -52,7 +52,7 @@ def handle_a7(params: dict):
             
         # Write validated output
         output_path.write_text(email)
-        return {"status": "success", "output_file": str(output_path)}
+        # return {"status": "success", "output_file": str(output_path)}
         
     except requests.exceptions.RequestException as e:
         logger.error(f"LLM API error: {str(e)}")

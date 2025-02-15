@@ -69,11 +69,11 @@ def handle_a6(params: dict):
         with open(output_file, 'w', encoding='utf-8') as f:
             json.dump(index_data, f, indent=2, ensure_ascii=False)
             
-        return {
-            "status": "success",
-            "files_processed": len(index_data),
-            "output_path": str(output_file)
-        }
+        # return {
+        #     "status": "success",
+        #     "files_processed": len(index_data),
+        #     "output_path": str(output_file)
+        # }
         
     except HTTPException:
         raise  # Re-raise validated security exceptions

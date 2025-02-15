@@ -223,15 +223,201 @@ class TaskHandler:
                     },
                     "ticket_type": {
                         "type": "string",
-                        "enum": ["Gold", "Silver", "Platinum"]
                     },
                     "output_file": {
                         "type": "string",
-                        "default": "/data/ticket-sales-gold.txt",
                         "pattern": "^/data/.*\\.txt$"
                     }
                 },
                 "required": ["ticket_type"]
+            }
+        },
+        {
+            "name": "b3_fetch_api",
+            "description": "Fetch data from REST API endpoint and save response",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "url": {
+                        "type": "string", 
+                        "format": "uri",
+                        "description": "Full HTTPS API endpoint URL"
+                    },
+                    "output_path": {
+                        "type": "string",
+                        "default": "/data/api-response",
+                        "pattern": "^/data/",
+                        "description": "Base path to save response (extension added automatically)"
+                    },
+                    "method": {
+                        "type": "string",
+                        "enum": ["GET", "POST"],
+                        "default": "GET"
+                    },
+                    "headers": {
+                        "type": "object",
+                        "additionalProperties": {"type": "string"},
+                        "description": "HTTP headers for the request"
+                    },
+                    "params": {
+                        "type": "object",
+                        "additionalProperties": {"type": "string"},
+                        "description": "Query parameters for the request"
+                    }
+                },
+                "required": ["url"]
+            }
+        },
+        {
+            "name": "b4_git_ops",
+            "description": "Clone git repository and create a new commit",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "repository_url": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "HTTPS Git repository URL"
+                    },
+                    "target_directory": {
+                        "type": "string",
+                        "pattern": "^/data/",
+                        "default": "/data/repos/{repo_name}",
+                        "description": "Path to clone repository into"
+                    },
+                    "commit_message": {
+                        "type": "string",
+                        "description": "Commit message description"
+                    },
+                    "file_patterns": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "default": ["."],
+                        "description": "File patterns to add to commit"
+                    }
+                },
+                "required": ["repository_url", "commit_message"]
+            }
+        },
+        {
+            "name": "b5_execute_sql",
+            "description": "Execute SQL query and save results to file",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "db_path": {
+                        "type": "string", 
+                        "pattern": "^/data/.*\\.(db|sqlite)$"
+                    },
+                    "query": {
+                        "type": "string",
+                        "description": "SQL query with ? placeholders"
+                    },
+                    "output_file": {  # NEW PARAMETER
+                        "type": "string",
+                        "pattern": "^/data/",
+                        "description": "Path to write query results"
+                    },
+                    "parameters": {
+                        "type": "array",
+                        "items": {"type": ["string", "number"]}
+                    }
+                },
+                "required": ["db_path", "query", "output_file"]  # ADD output_file
+            }
+        },
+        {
+            "name": "b6_scrape_website",
+            "description": "Scrape data from a website and save structured results",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "url": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "Website URL to scrape"
+                    },
+                    "output_file": {
+                        "type": "string",
+                        "pattern": "^/data/",
+                        "description": "Path to save scraped data (JSON format)"
+                    },
+                    "selectors": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "CSS selectors for elements to extract"
+                    }
+                },
+                "required": ["url", "output_file"]
+            }
+        },
+        {
+            "name": "b7_process_image",
+            "description": "Compress or resize images while maintaining security constraints",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "input_path": {
+                        "type": "string",
+                        "pattern": "^/data/",
+                        "description": "Source image path (supports PNG/JPEG/WEBP)"
+                    },
+                    "output_path": {
+                        "type": "string", 
+                        "pattern": "^/data/",
+                        "description": "Destination path with extension"
+                    },
+                    "width": {
+                        "type": "integer",
+                        "minimum": 16,
+                        "maximum": 4096,
+                        "description": "Target width (px)"
+                    },
+                    "height": {
+                        "type": "integer",
+                        "minimum": 16,
+                        "maximum": 4096,
+                        "description": "Target height (px)"
+                    },
+                    "quality": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 95,
+                        "default": 85,
+                        "description": "Compression quality (1-95)"
+                    },
+                    "preserve_aspect": {
+                        "type": "boolean",
+                        "default": True,
+                        "description": "Maintain original aspect ratio"
+                    }
+                },
+                "required": ["input_path", "output_path"],
+                "anyOf": [
+                    {"required": ["width"]},
+                    {"required": ["height"]},
+                    {"required": ["quality"]}
+                ]
+            }
+        },
+        {
+            "name": "b9_markdown_to_html",
+            "description": "Convert Markdown file to HTML with path validation",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "input_file": {
+                        "type": "string",
+                        "pattern": "^/data/.*\\.md$",
+                        "description": "Input Markdown file path"
+                    },
+                    "output_file": {
+                        "type": "string", 
+                        "pattern": "^/data/.*\\.html$",
+                        "description": "Output HTML file path"
+                    }
+                },
+                "required": ["input_file", "output_file"]
             }
         }
         ]

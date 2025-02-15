@@ -1,3 +1,4 @@
+# a3.py
 from datetime import datetime
 from dateutil import parser
 from pathlib import Path
@@ -12,9 +13,9 @@ WEEKDAY_MAP = {
 
 def handle_a3(params: dict):
     """Main handler for A3 tasks"""
-    input_path = validate_path(params.setdefault("input_file", "/data/dates.txt"))
-    output_path = validate_path(params.setdefault("output_file", "/data/day-count.txt"))
     target_weekday = WEEKDAY_MAP[params['weekday'].lower()]
+    input_path = validate_path(params.get("input_file", "/data/dates.txt"))
+    output_path = validate_path(params.get("output_file", f"/data/dates-{target_weekday}.txt"))
     
     if not input_path.exists():
         raise HTTPException(400, detail=f"Input file {input_path} not found")
@@ -37,4 +38,4 @@ def handle_a3(params: dict):
                 continue
     
     output_path.write_text(str(count))
-    return {"count": count, "output_path": str(output_path)}
+    # return {"count": count, "output_path": str(output_path)}

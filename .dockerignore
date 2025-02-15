@@ -31,3 +31,5 @@ data/
 
 node_modules/
 
+safety-report.txt
+bandit-report.json

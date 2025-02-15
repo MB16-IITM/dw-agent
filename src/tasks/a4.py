@@ -11,9 +11,12 @@ def handle_a4(params: dict):
     """Sort contacts by last_name then first_name and save to output file"""
     try:
         # Validate and resolve paths
-        input_path = validate_path(params.setdefault("input_file", "/data/contacts.json"))
-        output_path = validate_path(params.setdefault("input_file", "/data/sorted-contacts.json"))
+        input_path = validate_path(params.get("input_file", "/data/contacts.json"))
+        output_path = validate_path(params.get("output_file", "/data/contacts-sorted.json"))
         
+        #
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+
         # Load contacts data
         with open(input_path, 'r') as f:
             contacts = json.load(f)
@@ -35,12 +38,12 @@ def handle_a4(params: dict):
         with open(output_path, 'w') as f:
             json.dump(sorted_contacts, f, indent=2, ensure_ascii=False)
             
-        return {
-            "status": "sorted",
-            "input_file": str(input_path),
-            "output_file": str(output_path),
-            "count": len(sorted_contacts)
-        }
+        # return {
+        #     "status": "sorted",
+        #     "input_file": str(input_path),
+        #     "output_file": str(output_path),
+        #     "count": len(sorted_contacts)
+        # }
         
     except FileNotFoundError:
         raise HTTPException(status_code=404, detail="Input file not found")
